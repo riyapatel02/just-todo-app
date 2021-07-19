@@ -1,0 +1,37 @@
+{% extends 'base.html' %}
+{% block title %}Welcome to our website{% endblock title %}
+{% block body %}
+
+<div class="container mt-5 pt-5">
+    <div class="col-md-6 mx-auto">
+        <h2>Todo App In Django</h2>
+        <form method='POST'>
+            {% csrf_token %}
+            <div class="from-group">
+                <label>Enter todo task</label>
+                <input class="form-control" name='todo' placeholder="Enter todo task">
+                <button type="submit" class='btn btn-success mt-2'>Add Todo</button>
+            </div>
+        </form>
+        
+        <ul class="list-group mt-5" >
+            {% for todo in todos %}
+            <li class="list-group-item">
+                <input type='checkbox' onchange="toggleTodo('{{todo.id}}')" {% if todo.is_completed %} checked {% endif %} > 
+                    {{todo.todo_name}}
+                <a href="{% url 'delete_todo' todo.id %}" class='btn btn-danger btn-sm'><i class="fas fa-trash-alt"></i></a>
+            </li>
+            {% endfor %}
+        </ul>
+
+    </div>
+</div>
+
+<script>
+    function toggleTodo(id){
+        fetch('/update-todo/?id=${id}')
+        window.location.reload()
+    }
+</script>
+
+{% endblock body %}
